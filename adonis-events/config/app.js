@@ -5,8 +5,8 @@ const Env = use('Env')
 
 module.exports = {
 
-  /*
-  |--------------------------------------------------------------------------
+
+/*|--------------------------------------------------------------------------
   | Application Name
   |--------------------------------------------------------------------------
   |
@@ -30,6 +30,8 @@ module.exports = {
   appKey: Env.getOrFail('APP_KEY'),
 
   http: {
+
+    loggerEnv: ['development'],
     /*
     |--------------------------------------------------------------------------
     | Allow Method Spoofing
@@ -202,7 +204,7 @@ module.exports = {
     console: {
       driver: 'console',
       name: 'adonis-app',
-      level: 'info'
+      level: 'debug'
     },
 
     /*
@@ -219,8 +221,8 @@ module.exports = {
     file: {
       driver: 'file',
       name: 'adonis-app',
-      filename: 'adonis.log',
-      level: 'info'
+      filename: '/home/hntd/adonis.log',
+      level: 'debug'
     }
   },
 

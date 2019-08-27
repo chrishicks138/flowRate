@@ -8,7 +8,7 @@ class RiverFlowRate extends Model {
     return 'river_flow_rates'
   }
   static get primaryKey () {
-     return 'id'
+     return 'site'
   }
 }
 
