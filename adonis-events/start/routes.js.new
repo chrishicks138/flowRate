@@ -1,0 +1,8 @@
+const Route = use('Route')
+    Route.group(() => {
+      Route.post('river_flow_rates', 'FlowController.store')
+      Route.get('river_flow_rates', 'FlowController.index')
+      Route.get('river_flow_rates/:id', 'FlowController.show')
+      Route.put('river_flow_rates/:id', 'FlowController.update')
+      Route.delete('river_flow_rates/:id', 'FlowController.delete')
+    }).prefix('api/13206000')
