@@ -13,6 +13,7 @@ def scrape(wdurl,site):
   global date
   global timezone
   url = wdurl+site
+  print("Downloading: "+url)
   page = requests.get(url)
   html = page.text
   text = re.search("(USGS\t.*)",str(html))
@@ -30,11 +31,9 @@ def api_put(site,local_api):
   r = requests.put(local_api, verify=False, json=data)
 
 def do_work(item):
-  sites_state = "/home/hntd/flowRate/usgs/id-sites.txt"
-  sites = open(sites_state,"r")
+  sites = open(item,"r")
   local_api = "http://localhost:3333/api/update/"
   wdurl = "https://waterservices.usgs.gov/nwis/iv/?format=rdb,1.0&sites="
-
   for site in sites:
     site = site.strip('\n')
     scrape(wdurl,site)
@@ -42,7 +41,6 @@ def do_work(item):
   with lock:
     print(threading.current_thread().name,item)
 
-# The worker thread pulls an item from the queue and processes it
 def worker():
   while True:
     item = q.get()
@@ -50,15 +48,25 @@ def worker():
     q.task_done()
 # Create the queue and thread pool.
 q = Queue()
-for i in range(1):
+sites_state = ["./flowRate/usgs/id-sites.txt","./flowRate/usgs/co-sites.txt"]
+for state in sites_state:
   t = threading.Thread(target=worker)
   t.daemon = True # thread dies when main thread (only non-daemon thread) exits.
   t.start()
 # stuff work items on the queue (in this case, just a number).
 start = time.perf_counter()
-for item in range(1):
-  q.put(item)
-  q.join() # block until all tasks are done
+for state in sites_state:
+  q.put(state)
+q.join() # block until all tasks are done
 # "Work" took .1 seconds per task. 20 tasks serially would be 2 seconds. With 4 threads should be about .5
 # seconds (contrived because non-CPU intensive "work")
 print('time:',time.perf_counter() - start)
+
+'''
+local = "http://localhost:3333/api/13206000"
+localpage = requests.get(local)
+htmll = localpage.text
+whdata = {"value1": htmll, "value2": " ", "value3": " "}
+whurl = "https://maker.ifttt.com/trigger/flow/with/key/jejMA-IrKcQ28zqrLehtC-K586j5giZWtgL2ZpQiFW3"
+d = requests.post(whurl, verify=True, json=whdata)
+'''

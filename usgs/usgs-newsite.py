@@ -1,6 +1,6 @@
 import requests
 
-file = open("./id-sites.txt","r")
+file = open("./flowRate/usgs/co-sites.txt","r")
 
 for line in file:
   line = line.strip('\n')
